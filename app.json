@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Base 2 Rebuild",
+    "slug": "base-2-rebuild",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "android": {
+      "package": "com.aishervin.base2rebuild",
+      "versionCode": 1
+    }
+  }
+}
