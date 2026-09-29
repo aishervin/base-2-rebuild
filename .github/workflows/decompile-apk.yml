@@ -1,0 +1,70 @@
+name: Download and decompile APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      allow_public_artifacts:
+        description: Allow APK and decompiled files to be downloadable from this public repository
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  decompile:
+    if: ${{ github.event.repository.private || inputs.allow_public_artifacts }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Download APK from private repository secret
+        env:
+          APK_DOWNLOAD_URL: ${{ secrets.APK_DOWNLOAD_URL }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${APK_DOWNLOAD_URL:-}" ]]; then
+            echo "::error::Add the APK_DOWNLOAD_URL repository secret before running this workflow."
+            exit 1
+          fi
+
+          curl --fail --location --silent --show-error --retry 2 --max-time 300 \
+            "$APK_DOWNLOAD_URL" --output "$RUNNER_TEMP/input.apk"
+          if ! unzip -tq "$RUNNER_TEMP/input.apk" >/dev/null; then
+            echo "::error::The downloaded file is not a valid APK/ZIP archive."
+            exit 1
+          fi
+
+          mkdir -p results
+          cp "$RUNNER_TEMP/input.apk" results/original.apk
+
+      - name: Download pinned Apktool
+        run: |
+          set -euo pipefail
+          curl --fail --location --silent --show-error \
+            "https://github.com/iBotPeaches/Apktool/releases/download/v2.10.0/apktool_2.10.0.jar" \
+            --output "$RUNNER_TEMP/apktool.jar"
+
+      - name: Decompile APK
+        run: |
+          set -euo pipefail
+          java -jar "$RUNNER_TEMP/apktool.jar" d --force \
+            "$RUNNER_TEMP/input.apk" --output results/decompiled
+
+      - name: Upload APK and decompiled files
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-and-decompiled-source
+          path: |
+            results/original.apk
+            results/decompiled/
+          if-no-files-found: error
+          retention-days: 7

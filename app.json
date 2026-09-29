@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Base 2 Rebuild",
+    "name": "درگاه خدمات شهری",
     "slug": "base-2-rebuild",
     "version": "0.1.0",
     "orientation": "portrait",
@@ -8,7 +8,8 @@
     "newArchEnabled": true,
     "android": {
       "package": "com.aishervin.base2rebuild",
-      "versionCode": 1
+      "versionCode": 1,
+      "usesCleartextTraffic": true
     }
   }
 }
