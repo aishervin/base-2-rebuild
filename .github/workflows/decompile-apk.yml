@@ -2,19 +2,12 @@ name: Download and decompile APK
 
 on:
   workflow_dispatch:
-    inputs:
-      allow_public_artifacts:
-        description: Allow APK and decompiled files to be downloadable from this public repository
-        required: false
-        type: boolean
-        default: false
 
 permissions:
   contents: read
 
 jobs:
   decompile:
-    if: ${{ github.event.repository.private || inputs.allow_public_artifacts }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out project
@@ -26,9 +19,9 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Download APK from private repository secret
+      - name: Download APK from supplied public link
         env:
-          APK_DOWNLOAD_URL: ${{ secrets.APK_DOWNLOAD_URL }}
+          APK_DOWNLOAD_URL: https://api.betadrop.app/api/download/7b50027e-bfca-43a3-a1e2-8ff20aabfb39?token=aTg76empKBVK9rmxe0IwHAS9BaFD9hkm
         run: |
           set -euo pipefail
           if [[ -z "${APK_DOWNLOAD_URL:-}" ]]; then
