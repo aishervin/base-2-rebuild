@@ -1,38 +1,14 @@
-# بازسازی برنامه اندروید
+# Base 2
 
-این برنامه یک پوستهٔ React Native برای باز کردن درگاه خدمات شهری در WebView است.
+This repository has two separate tasks:
 
-## وضعیت
+- The Android app opens the city-services portal in a WebView.
+- The manual `Download and decompile APK` workflow downloads the APK and decompiles it with Apktool.
 
-- APK بررسی‌شده با React Native و Hermes ساخته شده است.
-- فایل APK شامل بایت‌کد کامپایل‌شده است، نه سورس اصلی JavaScript؛ بنابراین این مخزن هنوز بازسازی کامل صفحه‌ها یا منطق برنامه نیست.
-- APK اصلی عمداً در مخزن عمومی قرار نگرفته است.
-- صفحهٔ اصلی درگاه `http://37.32.10.1:3737` را باز می‌کند.
-- ورود و OTP داخل خود درگاه انجام می‌شود؛ برنامه رمز یا کد یک‌بارمصرف را ذخیره نمی‌کند.
-- کوکی‌ها و ذخیره‌سازی وب در WebView فعال‌اند تا نشست وب پس از بستن و بازکردن برنامه باقی بماند.
-- دکمه‌های بازگشت و بارگذاری دوباره، نوار پیشرفت و پیام خطای اتصال در برنامه وجود دارند.
+## Download and decompile
 
-## اجرا
+Open GitHub Actions and run `Download and decompile APK`. When it finishes, download the `apk-and-decompiled-source` artifact. It contains the original APK and the complete decompiled folder. The artifact expires after 7 days; outputs are not committed to Git.
 
-```sh
-npm install
-npx expo start
-```
+## Build the Android app
 
-## ساخت APK
-
-در GitHub از بخش Actions، گردش‌کار `Build Android APK` را اجرا کنید. با هر push به شاخه `main` نیز به‌صورت خودکار اجرا می‌شود. فایل APK از بخش Artifacts همان اجرا قابل دریافت است.
-
-## دریافت و دیکامپایل APK
-
-گردش‌کار دستی `Download and decompile APK`، لینک دانلود عمومی را باز می‌کند، با Apktool دیکامپایل می‌کند و فایل APK و پوشهٔ دیکامپایل‌شده را به‌صورت Artifact هفت‌روزه ارائه می‌دهد. چون مخزن عمومی است، لینک و Artifact نیز عمومی‌اند. فایل‌های خروجی به تاریخچهٔ Git اضافه نمی‌شوند.
-
-## امنیت
-
-نشانی فعلی از HTTP استفاده می‌کند؛ بنابراین ترافیک، از جمله ورود و کوکی نشست، رمزنگاری نمی‌شود. برای استفادهٔ واقعی، ابتدا درگاه را به HTTPS منتقل کنید و سپس `PORTAL_URL` را در `App.js` به نشانی HTTPS تغییر دهید. برای دسترسی به HTTP، اجازهٔ cleartext در سطح برنامه فعال شده است؛ پس از انتقال به HTTPS این اجازه را حذف کنید.
-
-رمز، OTP، فایل امضای اندروید یا کلیدهای API را در این مخزن عمومی قرار ندهید. برای انتشار نسخه نهایی باید کلید امضای متعلق به خودتان را به‌صورت GitHub Actions Secrets تنظیم کنید.
-
-## ادامه کار
-
-برای بیلد، `npm install` و سپس گردش‌کار `Build Android APK` در GitHub Actions را اجرا کنید. نصب WebView و ساخت APK در این محیط هنوز اجرا نشده است.
+Run `Build Android APK` from GitHub Actions, or push to `main`. The resulting APK is available as the `base-2-rebuild-apk` artifact.
